@@ -1,8 +1,10 @@
-mod native;
-mod polygon;
+pub mod math;
+pub mod native;
+pub mod polygon;
 
-use native::*;
-use polygon::*;
+pub use math::*;
+pub use native::*;
+pub use polygon::*;
 
 use crate::error::*;
 
@@ -32,21 +34,21 @@ fn parse_lump_data<T: Pod + Clone>(
 
 #[allow(dead_code)]
 pub struct BSP {
-    vertexes: Vec<mvertex_t>,
-    dplanes: Vec<dplane_t>,
-    planes: Vec<cplane_t>,
-    edges: Vec<dedge_t>,
-    surf_edges: Vec<i32>,
-    leaves: Vec<dleaf_t>,
-    dnodes: Vec<dnode_t>,
-    nodes: Vec<snode_t>,
-    faces: Vec<dface_t>,
-    tex_info: Vec<texinfo_t>,
-    brushes: Vec<dbrush_t>,
-    brush_sides: Vec<dbrushside_t>,
-    leaf_faces: Vec<u16>,
-    leaf_brushes: Vec<u16>,
-    polys: Vec<Polygon>,
+    pub vertexes: Vec<mvertex_t>,
+    //pub dplanes: Vec<dplane_t>,
+    pub planes: Vec<cplane_t>,
+    pub edges: Vec<dedge_t>,
+    pub surf_edges: Vec<i32>,
+    pub leaves: Vec<dleaf_t>,
+    //pub dnodes: Vec<dnode_t>,
+    pub nodes: Vec<snode_t>,
+    pub faces: Vec<dface_t>,
+    pub tex_info: Vec<texinfo_t>,
+    pub brushes: Vec<dbrush_t>,
+    pub brush_sides: Vec<dbrushside_t>,
+    pub leaf_faces: Vec<u16>,
+    pub leaf_brushes: Vec<u16>,
+    pub polys: Vec<Polygon>,
 }
 
 impl BSP {
@@ -104,12 +106,12 @@ impl BSP {
 
         Ok(Self {
             vertexes,
-            dplanes,
+            //dplanes,
             planes,
             edges,
             surf_edges,
             leaves,
-            dnodes,
+            //dnodes,
             nodes,
             faces,
             tex_info,
