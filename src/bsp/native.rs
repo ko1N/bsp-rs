@@ -113,21 +113,23 @@ pub struct dedge_t {
     pub v: [u16; 2], // 0x0
 } //Size=0x4
 
-#[repr(C)]
-#[derive(Clone, Debug, Pod)]
+#[repr(C, packed)]
+#[derive(Clone, Debug, Copy, Pod)]
 pub struct dleaf_t {
-    pub contents: i32,           // 0x00
-    pub cluster: i16,            // 0x04
-    pub area: i16,               // 0x06 - default: 9
-    pub flags: i16,              // 0x11 - default: 7
-    pub mins: [i16; 3],          // 0x1A
-    pub maxs: [i16; 3],          // 0x20
-    pub first_leaf_face: u16,    // 0x26
-    pub num_leaf_faces: u16,     // 0x28
-    pub first_leaf_brush: u16,   // 0x2A
-    pub num_leaf_brushes: u16,   // 0x2C
-    pub feaf_water_data_id: i16, // 0x2E
-} //Size=0x30
+    pub contents: i32, // 0x00
+    pub cluster: i16,  // 0x04
+    //pub area: i16,               // 0x06 - bits: 9
+    //pub flags: i16,              // 0x11 - bits: 7
+    pub area_flags: u16,         // 0x06
+    pub mins: [i16; 3],          // 0x08
+    pub maxs: [i16; 3],          // 0x0e
+    pub first_leaf_face: u16,    // 0x14
+    pub num_leaf_faces: u16,     // 0x16
+    pub first_leaf_brush: u16,   // 0x18
+    pub num_leaf_brushes: u16,   // 0x1a
+    pub feaf_water_data_id: i16, // 0x1c
+    pub pad0: [u8; 2],           //
+} //Size=0x20
 
 #[repr(C)]
 #[derive(Clone, Debug, Pod)]
@@ -158,8 +160,8 @@ pub struct snode_t {
     pub pad0: [u8; 2],          // 0x2A
 } //Size=0x2C
 
-#[repr(C)]
-#[derive(Clone, Debug, Pod)]
+#[repr(C, packed)]
+#[derive(Clone, Debug, Copy, Pod)]
 pub struct dface_t {
     pub plane_num: u16,                            // 0x00
     pub side: u8,                                  // 0x02
@@ -170,16 +172,16 @@ pub struct dface_t {
     pub disp_info: i16,                            // 0x0C
     pub surface_fog_volume_id: i16,                // 0x0E
     pub styles: [u8; 4],                           // 0x10
-    pub light_ofs: i32,                            // 0x18
-    pub area: f32,                                 // 0x1C
-    pub lightmap_texture_mins_in_luxels: [i32; 2], // 0x20
-    pub lightmap_texture_size_in_luxels: [i32; 2], // 0x28
-    pub orig_face: i32,                            // 0x30
-    pub num_prims: u16,                            // 0x34
-    pub first_prim_id: u16,                        // 0x36
-    pub smoothing_groups: u16,                     // 0x38
-    pub pad0: [u8; 2],                             // 0x2A
-} //Size=0x3A
+    pub light_ofs: i32,                            // 0x14
+    pub area: f32,                                 // 0x18
+    pub lightmap_texture_mins_in_luxels: [i32; 2], // 0x1C
+    pub lightmap_texture_size_in_luxels: [i32; 2], // 0x24
+    pub orig_face: i32,                            // 0x2C
+    pub num_prims: u16,                            // 0x30
+    pub first_prim_id: u16,                        // 0x32
+    pub smoothing_groups: u16,                     // 0x34
+    pub pad0: [u8; 2],                             //
+} //Size=0x38
 
 #[repr(C)]
 #[derive(Clone, Debug, Pod)]
@@ -207,3 +209,30 @@ pub struct dbrushside_t {
     pub bevel: u8,      // 0x6
     pub thin: u8,       // 0x7
 } //Size=0x8
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::mem::size_of;
+
+    #[test]
+    fn test_struct_sizes() {
+        assert_eq!(size_of::<dheader_t>(), 0x40C);
+        assert_eq!(size_of::<lump_t>(), 0x10);
+
+        assert_eq!(size_of::<mvertex_t>(), 0xC);
+        assert_eq!(size_of::<dplane_t>(), 0x14);
+        //assert_eq!(size_of::<cplane_t>(), 0x14); // only used internally
+
+        assert_eq!(size_of::<dedge_t>(), 0x4);
+
+        assert_eq!(size_of::<dleaf_t>(), 0x20);
+        assert_eq!(size_of::<dnode_t>(), 0x20);
+        //assert_eq!(size_of::<snode_t>(), 0x2C); // only used internally
+        assert_eq!(size_of::<dface_t>(), 0x38);
+
+        assert_eq!(size_of::<texinfo_t>(), 0x48);
+        assert_eq!(size_of::<dbrush_t>(), 0xC);
+        assert_eq!(size_of::<dbrushside_t>(), 0x8);
+    }
+}

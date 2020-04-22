@@ -129,7 +129,13 @@ fn ray_cast_node(
     if node_idx < 0 {
         let leaf = &bsp.leaves[(-node_idx - 1) as usize];
         for i in 0..(leaf.num_leaf_brushes) {
-            let brush_idx = bsp.leaf_brushes[(leaf.first_leaf_brush + i) as usize] as i32;
+            let leaf_idx = (leaf.first_leaf_brush + i) as usize;
+            if leaf_idx >= bsp.leaf_brushes.len() {
+                println!("shouldnt happen?");
+                continue;
+            }
+            let brush_idx = bsp.leaf_brushes[leaf_idx] as i32;
+
             if brush_idx as usize >= bsp.brushes.len() {
                 continue;
             }
