@@ -57,7 +57,7 @@ pub const MASK_SHOT_HULL: i32 = CONTENTS_SOLID
 
 pub const DIST_EPSILON: f32 = 0.03125f32;
 
-pub struct trace_t {
+pub struct Trace {
     pub all_solid: bool,
     pub start_solid: bool,
     pub fraction: f32,
@@ -69,7 +69,7 @@ pub struct trace_t {
     pub brush_side: i32,
 }
 
-impl trace_t {
+impl Trace {
     pub fn new() -> Self {
         Self {
             all_solid: true,
@@ -86,13 +86,13 @@ impl trace_t {
 }
 
 pub fn is_visible(bsp: &BSP, from: [f32; 3], to: [f32; 3]) -> bool {
-    let mut trace = trace_t::new();
+    let mut trace = Trace::new();
     ray_cast(bsp, from, to, &mut trace);
 
     !(trace.fraction < 1f32)
 }
 
-pub fn ray_cast(bsp: &BSP, from: [f32; 3], to: [f32; 3], trace: &mut trace_t) {
+pub fn ray_cast(bsp: &BSP, from: [f32; 3], to: [f32; 3], trace: &mut Trace) {
     if bsp.planes.is_empty() {
         return;
     }
@@ -120,7 +120,7 @@ fn ray_cast_node(
     node_idx: i32,
     start_fract: f32,
     end_fract: f32,
-    trace: &mut trace_t,
+    trace: &mut Trace,
 ) {
     if trace.fraction <= start_fract {
         return;
@@ -294,7 +294,7 @@ fn ray_cast_node(
     }
 }
 
-fn ray_cast_brush(bsp: &BSP, from: [f32; 3], to: [f32; 3], brush: &dbrush_t, trace: &mut trace_t) {
+fn ray_cast_brush(bsp: &BSP, from: [f32; 3], to: [f32; 3], brush: &dbrush_t, trace: &mut Trace) {
     if brush.num_sides == 0 {
         return;
     }
@@ -386,13 +386,7 @@ fn ray_cast_brush(bsp: &BSP, from: [f32; 3], to: [f32; 3], brush: &dbrush_t, tra
     }
 }
 
-fn ray_cast_surface(
-    bsp: &BSP,
-    from: [f32; 3],
-    to: [f32; 3],
-    surface_idx: i32,
-    trace: &mut trace_t,
-) {
+fn ray_cast_surface(bsp: &BSP, from: [f32; 3], to: [f32; 3], surface_idx: i32, trace: &mut Trace) {
     if surface_idx as usize >= bsp.polys.len() {
         return;
     }
