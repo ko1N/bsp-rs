@@ -1,6 +1,7 @@
 pub mod bsp;
 pub mod error;
 pub mod trace;
+pub mod workshop;
 
 #[cfg(test)]
 mod tests {
