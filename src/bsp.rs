@@ -13,7 +13,7 @@ use std::io::{Read, Seek, SeekFrom};
 use std::mem::{size_of, MaybeUninit};
 use std::path::Path;
 
-use dataview::Pod;
+use dataview::{Pod, PodMethods};
 
 fn parse_lump_data<T: Pod + Clone>(
     file: &mut File,
