@@ -3,7 +3,6 @@ mod error;
 mod trace;
 
 use bsp::*;
-use trace::*;
 
 use std::env;
 

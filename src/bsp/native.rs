@@ -1,7 +1,5 @@
 #![allow(dead_code)]
 
-use std::mem::MaybeUninit;
-
 use dataview::Pod;
 
 pub const HEADER_MAGIC: i32 = 0x50534256; // 'VBSP'
@@ -68,9 +66,9 @@ pub struct dheader_t {
     pub map_revision: i32,                  // 0x408
 } //Size=0x40C
 
-impl dheader_t {
-    pub fn uninit() -> Self {
-        unsafe { MaybeUninit::uninit().assume_init() }
+impl Default for dheader_t {
+    fn default() -> Self {
+        unsafe { core::mem::zeroed() }
     }
 }
 

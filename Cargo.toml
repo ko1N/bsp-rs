@@ -6,3 +6,14 @@ edition = "2018"
 
 [dependencies]
 dataview = "1.0"
+
+# workshop
+log = { version = "0.4", optional = true }
+serde = { version = "1.0", optional = true, features = ["derive"] }
+bzip2 = { version = "0.4", optional = true }
+zip = { version = "2.2", optional = true }
+reqwest = { version = "0.12", optional = true, features = ["blocking", "json"] }
+
+[features]
+default = []
+workshop = ["log", "serde", "bzip2", "zip", "reqwest"]

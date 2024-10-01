@@ -1,6 +1,8 @@
 pub mod bsp;
 pub mod error;
 pub mod trace;
+
+#[cfg(feature = "workshop")]
 pub mod workshop;
 
 #[cfg(test)]

@@ -2,7 +2,6 @@ pub mod math;
 pub mod native;
 pub mod polygon;
 
-pub use math::*;
 pub use native::*;
 pub use polygon::*;
 
@@ -10,7 +9,7 @@ use crate::error::*;
 
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Seek, SeekFrom};
-use std::mem::{size_of, MaybeUninit};
+use std::mem::size_of;
 use std::path::Path;
 
 use dataview::{Pod, PodMethods};
@@ -26,7 +25,7 @@ fn parse_lump_data<T: Pod + Clone>(
         return Err(Error::new("invalid lump data"));
     }
 
-    let mut out: Vec<T> = vec![unsafe { MaybeUninit::uninit().assume_init() }; lump_size as usize];
+    let mut out: Vec<T> = vec![unsafe { core::mem::zeroed() }; lump_size as usize];
     file.seek(SeekFrom::Start(lump.fileofs as u64))?;
     file.read_exact(out.as_bytes_mut())?;
     Ok(out)
@@ -55,7 +54,7 @@ impl BSP {
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
         let mut file = OpenOptions::new().read(true).write(false).open(path)?;
 
-        let mut header = dheader_t::uninit();
+        let mut header = dheader_t::default();
         file.read_exact(header.as_bytes_mut())?;
 
         if header.ident != HEADER_MAGIC {
